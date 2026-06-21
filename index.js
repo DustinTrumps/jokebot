@@ -53,7 +53,7 @@ async function getJOKE(JOKEurl) {
   }
 }
 
-cron.schedule("36 10 * * *", async () => {
+cron.schedule("0 9 * * *", async () => {
   try {
     const jokeData = await getJOKE('https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single');
     await app.client.chat.postMessage({
