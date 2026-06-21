@@ -53,19 +53,28 @@ async function getJOKE(JOKEurl) {
   }
 }
 
-cron.schedule("0 9 * * *", async () => {
-  try {
-    const jokeData = await getJOKE('https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single');
-    await app.client.chat.postMessage({
-      channel: "C0P5NE354", // Channel ID
-      text: "Good morning! Here's your daily joke: \n" + jokeData.joke
-    });
+cron.schedule(
+  "0 9 * * *",
+  async () => {
+    try {
+      const jokeData = await getJOKE(
+        "https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single"
+      );
 
-    console.log("Message sent");
-  } catch (err) {
-    console.error(err);
+      await app.client.chat.postMessage({
+        channel: "C0P5NE354",
+        text: "Good morning! Here's your daily joke:\n" + jokeData.joke
+      });
+
+      console.log("Message sent");
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  {
+    timezone: "America/Los_Angeles"
   }
-});
+);
 
 (async () => {
   await app.start();
