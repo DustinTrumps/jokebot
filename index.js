@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cron = require("node-cron");
 const { App } = require("@slack/bolt");
 
 const app = new App({
@@ -35,11 +36,6 @@ app.command("/jokebot-joke-1p", async ({ ack, respond }) => {
   }
 });
 
-(async () => {
-  await app.start();
-  console.log("bot is running!");
-})();
-
 async function getJOKE(JOKEurl) {
   try {
     const response = await fetch(JOKEurl);
@@ -56,3 +52,22 @@ async function getJOKE(JOKEurl) {
     return null;
   }
 }
+
+cron.schedule("36 10 * * *", async () => {
+  try {
+    const jokeData = await getJOKE('https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single');
+    await app.client.chat.postMessage({
+      channel: "C0P5NE354", // Channel ID
+      text: "Good morning! Here's your daily joke: \n" + jokeData.joke
+    });
+
+    console.log("Message sent");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+(async () => {
+  await app.start();
+  console.log("bot is running!");
+})();
